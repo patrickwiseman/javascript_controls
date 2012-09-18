@@ -13,7 +13,7 @@ class Expander
   constructor: (fieldset_element, options = {}) ->
     @fieldset = $(fieldset_element)
     @legend = @fieldset.children("legend").first()
-    @children = @fieldset.children("*:visible,.expander-image-fix")
+    @children = @fieldset.children("*:visible,.expander-image-fix").filter(":not(legend)")
     @collapsed_css_class_name = 'expander-collapsed'
     @expanded_css_class_name = 'expander-expanded'
     
@@ -43,4 +43,3 @@ class Expander
     @legend.removeClass(@expanded_css_class_name)
     @legend.addClass(@collapsed_css_class_name)
     @children.hide()
-    @legend.show()
