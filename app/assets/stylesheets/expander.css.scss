@@ -1,0 +1,7 @@
+.expander-collapsed:before {
+  content: '►';
+}
+
+.expander-expanded:before {
+  content: '▼';
+}
