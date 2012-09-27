@@ -7,23 +7,55 @@ this.controls.expanders ||= []
 $ ->
   $("fieldset.expander").each ->
     exports.controls.expanders.push(new Expander(this,{}));
+  for expander in exports.controls.expanders
+    expander.initialize() 
 
 #To be called on a fieldset element with a legend
 class Expander
   constructor: (fieldset_element, options = {}) ->
+    #Dicitionary of configurables
+    @bottom_class_name = "expander-bottom"
+    @expanded_bottom_text = "Collapse Section"
+    @collapsed_bottom_text = "Expand Section"
+    @bottom_html = "<div class='#{@bottom_class_name}'></div>"
+    @collapsed_class_name = 'expander-collapsed'
+    @expanded_class_name = 'expander-expanded'
+    @expanded_title_text = "Click to collapse"
+    @collapsed_title_text = "Click to expand"
+    @force_exclude_class_name = "expander-force-exclude"
+    @force_include_class_name = "expander-force-include"
+
+    #All the crucical elements
     @fieldset = $(fieldset_element)
-    @legend = @fieldset.children("legend").first()
-    @children = @fieldset.children("*:visible,.expander-image-fix").filter(":not(legend)")
-    @collapsed_css_class_name = 'expander-collapsed'
-    @expanded_css_class_name = 'expander-expanded'
+    @options = options
+    @bottom = $(@bottom_html)
+    @fieldset.append(@bottom)
+    @legend = @fieldset.children("legend:first")
+    @bottom = @fieldset.children(".#{@bottom_class_name}:last")
     
-    if @fieldset.attr("data-expander-open") != undefined
+    #The children is everything visible except:
+    #  1. The first legend element of the expander
+    #  2. The inserted bottom control
+    @children = @fieldset.children("*:visible, br, .#{@force_include_class_name}")
+    #@children.filter(".expander").children("*")
+    @children = @children.not(@legend)
+    @children = @children.not(@bottom)
+    @children = @children.not(".#{@force_exclude_class_name}")
+
+    #Wire together the click options
+    @legend.click =>
+      this.toggle()
+    @bottom.click =>
+      this.toggle()
+
+  initialize: (options = {}) ->
+    @options = $.extend({}, @options, options)
+    
+    #Set the initial state of the expander according to options, closed by default
+    if @fieldset.attr("data-expander-open") != undefined && @fieldset.attr("data-expander-open") == 'true'
       this.expand()
     else
       this.collapse()
-    
-    @legend.click (eventObj) =>
-      this.toggle()
 
   toggle: ->
     @open = !@open
@@ -34,12 +66,18 @@ class Expander
 
   expand: ->
     @open = true
-    @legend.removeClass(@collapsed_css_class_name)
-    @legend.addClass(@expanded_css_class_name)
+    @fieldset.removeClass(@collapsed_class_name)
+    @fieldset.addClass(@expanded_class_name)
+    @legend.attr('title', @expanded_title_text)
+    @bottom.attr('title', @expanded_title_text)
+    @bottom.html(@expanded_bottom_text)
     @children.show()
 
   collapse: ->
     @open = false
-    @legend.removeClass(@expanded_css_class_name)
-    @legend.addClass(@collapsed_css_class_name)
+    @fieldset.removeClass(@expanded_class_name)
+    @fieldset.addClass(@collapsed_class_name)
+    @legend.attr('title', @collapsed_title_text)
+    @bottom.attr('title', @collapsed_title_text)
+    @bottom.html(@collapsed_bottom_text)
     @children.hide()
