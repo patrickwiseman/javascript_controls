@@ -1,3 +1,4 @@
+exports = this
 this.controls ||= new Object
 this.controls.find ||= (htmlAttribute, htmlAttributeValue) ->
   ret = null

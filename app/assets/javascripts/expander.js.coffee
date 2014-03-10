@@ -33,14 +33,11 @@ this.controls.find ||= (htmlAttribute, htmlAttributeValue) ->
     if expander.fieldset.attr(htmlAttribute) == htmlAttributeValue
       ret = expander
   ret
-
-#Setup any expanders
 $ ->
   $("fieldset.expander").each ->
     exports.controls.expanders.push(new Expander(this,{}));
   for expander in exports.controls.expanders
     expander.initialize()
-
 #To be called on a fieldset element with a legend
 class Expander
   constructor: (fieldset_element, options = {}) ->
