@@ -1,3 +1,28 @@
+#--
+# Copyright (c) 2012 Patrick Howard Wiseman
+#
+# https://github.com/patrickwiseman/javascript_controls
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#--
+
 #Setup global to track expander objects
 exports = this
 this.controls ||= new Object
@@ -14,7 +39,7 @@ $ ->
   $("fieldset.expander").each ->
     exports.controls.expanders.push(new Expander(this,{}));
   for expander in exports.controls.expanders
-    expander.initialize() 
+    expander.initialize()
 
 #To be called on a fieldset element with a legend
 class Expander
@@ -38,7 +63,7 @@ class Expander
     @fieldset.append(@bottom)
     @legend = @fieldset.children("legend:first")
     @bottom = @fieldset.children(".#{@bottom_class_name}:last")
-    
+
     #The children is everything visible except:
     #  1. The first legend element of the expander
     #  2. The inserted bottom control
@@ -56,7 +81,7 @@ class Expander
 
   initialize: (options = {}) ->
     @options = $.extend({}, @options, options)
-    
+
     #Set the initial state of the expander according to options, closed by default
     if @fieldset.attr("data-expander-open") != undefined && @fieldset.attr("data-expander-open") == 'true'
       this.expand()
